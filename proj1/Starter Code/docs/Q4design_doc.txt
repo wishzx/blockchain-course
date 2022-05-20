@@ -1,0 +1,33 @@
+######################################################################
+#
+# TODO: Write a short (1-3 paragraph) design document about your solution to Q4.
+#       Please include the following:
+#     
+#         1) An explanation of what you wrote and how the ScriptPubKey works
+#               
+                To redeem this script you need always the recipient signature, but there are 2 way to finish the validation.
+                The first method is by providing the secret x that must correspond to the provided hash.
+                The other way is if both parties agreed so you also need to provide the signature of the sender.
+
+
+
+#         2) Briefly, how the ScriptPubKey you wrote fits into the bigger 
+#            picture of this atomic swap.
+
+                To make this swap atomic you need to provide a way for both parties to go back if something wrong happens. This script is first used by Alice while creating
+                a timelocked transaction signed by both. The timelocked transaction allow her to get back the coins if something goes wrong so now she can broadcast it.
+
+                Now Bob must do the opposite, protecting himself with a shorter timelock because otherwise Alice can wait her timelock to expire and claim both his and her coins.
+                When he has the timelock transaction signed he can publish his ScriptPubKey and now Alice can redeem it revealing the secret key so that he can reedem too.
+
+
+#         3) Consider the case of Alice sending coins to Bob with coinExchangeScript:
+#            Why can Alice always get her money back if Bob doesn't redeem it? 
+#            Why can't this be solved with a simple 1-of-2 multisig? 
+#
+            Because Alice owns a transaction signed by both of them (so it can redeem it using condition 2 explained above) but is timelocked (for Bob protection). So after the timelock
+            Alice can always get back the money unless bob get to know the secret (which he can't unless Alice tell him)
+
+            I assume you meant 1-of-2 multisig instead of both signature. In that case Alice can just sign a non timelocked transaction and steal the money as soon as Bob publish his transaction.
+
+
